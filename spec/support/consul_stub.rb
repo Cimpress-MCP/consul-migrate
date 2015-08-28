@@ -2,7 +2,13 @@ require 'sinatra/base'
 
 class ConsulStub < Sinatra::Base
   get '/v1/acl/list' do
-    json_response 200, 'acls.json'
+    if params['token'] == 'dummy-token'
+      json_response 200, 'acls.json'
+    else
+      content_type 'text/plain'
+      status 403
+      "rpc error: rpc error: Permission denied"
+    end
   end
 
   private

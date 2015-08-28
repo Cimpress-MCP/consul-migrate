@@ -1,9 +1,12 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'consul/migrate'
 require 'webmock/rspec'
-require 'support/consul_stub'
+require 'fakefs/safe'
+require 'fakefs/spec_helpers'
 
 WebMock.disable_net_connect!(allow_localhost: true)
+
+SPEC_ROOT  = File.dirname(__FILE__)
 
 RSpec.configure do |config|
   config.before(:each) do
