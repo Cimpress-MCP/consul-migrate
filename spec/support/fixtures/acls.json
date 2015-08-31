@@ -1,10 +1,18 @@
 [
   {
-    "CreateIndex": 3,
-    "ModifyIndex": 3,
+    "CreateIndex": 1,
+    "ModifyIndex": 2,
     "ID": "8f246b77-f3e1-ff88-5b48-8ec93abf3e05",
     "Name": "Client Token",
     "Type": "client",
+    "Rules": ""
+  },
+  {
+    "CreateIndex": 3,
+    "ModifyIndex": 4,
+    "ID": "14e7fcdc-c5a2-4f7e-9c7e-ba035c23be62",
+    "Name": "Master Token",
+    "Type": "management",
     "Rules": ""
   }
 ]

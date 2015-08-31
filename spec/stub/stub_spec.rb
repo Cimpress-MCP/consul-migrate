@@ -32,4 +32,15 @@ describe "mock" do
     expect(response.first.empty?).to eq false
     expect(response.first.to_json).to_not eq "null"
   end
+
+  it 'should work with PUT' do
+    uri = URI('http://localhost:8500/hello')
+    req = Net::HTTP::Put.new(uri)
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+
+    expect(response.code).to eq "200"
+  end
 end
