@@ -13,20 +13,15 @@ class ConsulStub < Sinatra::Base
 
   put '/v1/acl/create' do
     if params['token'] == 'dummy-token'
-      data = { :ID => 'abc' }
-      # data = JSON.parse(request.body.read)
+      data = JSON.parse(request.body.read)
       content_type :json
       status 200
-      data[:ID]
+      { :ID => "#{data['ID']}" }.to_json
     else
       content_type 'text/plain'
       status 403
       "rpc error: rpc error: Permission denied"
     end
-  end
-
-  put '/hello' do
-    status 200
   end
 
   private

@@ -5,6 +5,7 @@ Welcome to your new gem! In this directory, you'll find the files you need to be
 TODO:
 
 1. Include port and address as options instead of hardcoded values.
+2. Spec test should also test for default policy allow case
 
 ## Installation
 

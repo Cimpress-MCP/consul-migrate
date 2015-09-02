@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/consul_stub'
 
 
-describe "mock" do
+describe ConsulStub do
 
   it 'should not work without a valid token' do
     uri = URI('http://localhost:8500/v1/acl/list?token=no-valid-dummy-token')
@@ -34,9 +34,9 @@ describe "mock" do
   end
 
   it 'should work with PUT' do
-    uri = URI('http://localhost:8500/hello')
-    req = Net::HTTP::Put.new(uri)
-
+    uri = URI('http://localhost:8500/v1/acl/create?token=dummy-token')
+    req = Net::HTTP::Put.new(uri, {'Content-Type' =>'application/json'})
+    req.body = {}.to_json
     response = Net::HTTP.start(uri.hostname, uri.port) do |http|
       http.request(req)
     end
