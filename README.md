@@ -1,11 +1,6 @@
-# Consul::Migrate
+# consul-migrate
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/consul/migrate`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO:
-
-1. Include port and address as options instead of hardcoded values.
-2. Spec test should also test for default policy allow case
+consul-migrate is a Ruby gem for migrating Consul's ACL datacenter. Consul does not natively support such migration mechanism, but does provide an API for accessing ACLs. consul-migrate uses this API to export ACL tokens from the current authoritative ACL datacenter and import them to another datacenter.
 
 ## Installation
 
@@ -24,14 +19,25 @@ Or install it yourself as:
     $ gem install consul-migrate
 
 ## Usage
+From the current authoritative ACL datacenter:
 
-TODO: Write usage instructions here
+```ruby
+require consul-migrate
 
-## Development
+client = Consul::Migrate::Client.new(acl_token: 'you-acl-master-token')
+client.export_acls('/path/to/file')
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+From the desired new ACL datacenter:
+```ruby
+require consul-migrate
+client = Consul::Migrate::Client.new(acl_token: 'you-acl-master-token')
+client.import_acls('/path/to/file')
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Caveats
+
+consul-migrate currently is only set up to work with the default `-client` (127.0.0.1) and default http port (8500). Future versions of consul-migrate should have parameters for inputing these values.
 
 ## Contributing
 
@@ -40,3 +46,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## TODO
+
+1. Have it work as a cli so that scripting is not necessary
+2. Include port and address as options instead of hardcoded values.
+3. Spec test should also test for default policy allow case

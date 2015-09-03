@@ -41,10 +41,16 @@ describe Consul::Migrate::Client do
 
     it '.import_acls' do
       json_file = File.expand_path("support/fixtures/acls.json", SPEC_ROOT)
+      parsed_json_file = JSON.parse(File.read(json_file))
 
-      @client.import_acls(json_file)
+      expected = []
+      parsed_json_file.each do |e|
+         expected.push(e.select {|key, value| ['ID'].include?(key) })
+      end
 
-      expect(false).to eq true
+      r = @client.import_acls(json_file)
+
+      expect(r).to match_array(expected)
     end
   end
 end

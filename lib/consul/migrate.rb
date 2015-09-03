@@ -17,11 +17,9 @@ module Consul
       def get_acl_list
         base_url = "http://localhost:8500/v1/acl/list"
         url = "#{base_url}?token=#{@@acl_token}"
-        resp = Net::HTTP.get_response(URI.parse(url))
+        response = Net::HTTP.get_response(URI.parse(url))
 
-        # TODO: Validate JSON
-
-        return resp.body
+        return response
       end
 
       # PUT single ACL
@@ -39,7 +37,7 @@ module Consul
 
       # Export ACLs into a file
       def export_acls(dest)
-        json = get_acl_list
+        json = get_acl_list.body
 
         File.open(dest, 'w') { |file|
           file.write(json)
@@ -47,17 +45,17 @@ module Consul
       end
 
       # Import ACLs from a file
+      # Returns array of IDs that were inserted into consul's ACL
       def import_acls(file)
         f = File.read(file)
         data_hash = JSON.parse(f)
 
         result = []
         data_hash.each do |k, v|
-          # result.push(put_acl(k))
-          # put_acl(k)
+          h = JSON.parse(put_acl(k).body)
+          result.push(h)
         end
 
-        # puts result
         return result
       end
 
