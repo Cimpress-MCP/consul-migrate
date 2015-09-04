@@ -1,3 +1,11 @@
 language: ruby
 rvm:
-  - 2.0.0
+- 2.0.0
+deploy:
+  provider: rubygems
+  api_key:
+    secure: nncwqi9KhHU62GYCJARoYA5OR0IprF1Q3Ec/G7YZ1y94ZBjjfGy3g8DsmDUDN6JV5HB5q7P62OcicdSb5kjv3X9mb1m7pK5/EA0NEGSwYVGiWygtWe6h4c1FtZDxaQ/v3+nX6t8dENpfNDM/38XeMOf+1keLhElTqyjCqKQztG1RPkroFY+KeB/WmG+YOxcGZIyXy2fgwt89Fovywv0cLOiM/cC9y33RQwLigLckz6vM4xyuAVGiaSlYGHB9LlcQfD5SfGT3w9EPJL0Q2d0fJiQ/nFjpK0L/thZZvoAz1h2ftRJTkDCBH9M9noS+Y1zJ/ywMmoHfJCkQy2eGkqvhg5fE4Zl5hcxie1KIUFiEK5ylizEJiytm1LYvVWiNjzL0GlDs5L730wZUmr2kwWkUq1/mSJB14EnB0LzjR4sAYeyIZcSpS61SqVa7JSkW3kNe59Tcz6aqxUP2BxtOLPgJ8IycxEz/NuFkz3hsmCVGawh+iRXfK9BkNf7iyUMImcIg6d9BE6xMQRAoBKehp9ANJolzIonUwSCC3k7mJONbdgR0dnZ7Mi1eLNPWI66he3spW4kngY4qOVDT8hBkOHlUvPmxDe1sxYyAyRl8GWgXosBJ29W3yb9kMSzco8TUMuhycOSXMhSx1HkIg46AGku2UmExL/GNl+L1wANrM3Fz3IY=
+  gem: consul-migrate
+  on:
+    tags: true
+    repo: Cimpress-MCP/consul-migrate
