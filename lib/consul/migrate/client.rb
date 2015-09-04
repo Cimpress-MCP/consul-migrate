@@ -1,4 +1,3 @@
-require 'consul/migrate/version'
 require 'json'
 require 'net/http'
 

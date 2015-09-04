@@ -1,4 +1,5 @@
 require 'consul/migrate/client'
+require 'consul/migrate/version'
 
 module Consul
   module Migrate
