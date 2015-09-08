@@ -1,4 +1,4 @@
 #! ruby
 require 'consul/migrate/cli'
 
-Zanzibar::Cli.start(ARGV)
+Consul::Migrate::Cli.start(ARGV)
