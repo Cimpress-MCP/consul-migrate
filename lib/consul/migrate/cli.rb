@@ -21,11 +21,11 @@ module Consul
       end
 
       desc 'init', 'Initialize consul-migrate instance'
-      option :bind_client, type: :string, aliases: :c,
+      method_option :bind_client, type: :string, aliases: :c,
                            desc: 'HTTPS client to bind to'
-      option :port, type: :numeric, aliases: :p,
+      method_option :port, type: :numeric, aliases: :p,
                     desc: 'Port to bind to'
-      option :acl_token, type: :string, aliases: :t,
+      method_option :acl_token, type: :string, aliases: :t,
                          desc: 'ACL token that is used to access API'
       def init
         write_config(options)
@@ -35,6 +35,7 @@ module Consul
       option :file, type: :string, default: 'output.json', aliases: :f,
                      desc: 'Target file to write to'
       def export
+        puts @client.options
         @client.export_acls(options[:file])
       end
 

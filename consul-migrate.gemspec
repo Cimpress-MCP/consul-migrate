@@ -21,10 +21,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'webmock', '~> 1.21.0'
-  spec.add_development_dependency 'rspec', '~> 3.1.0'
+  spec.add_development_dependency 'webmock', '~> 1.21'
+  spec.add_development_dependency 'rspec', '~> 3.1'
   spec.add_development_dependency 'sinatra', '~> 1.4'
   spec.add_development_dependency 'fakefs', '~> 0.6'
 
-  spec.add_runtime_dependency 'thor', '~> 0.19.0'
+  spec.add_runtime_dependency 'thor', '~> 0.19'
 end
