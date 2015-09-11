@@ -1,34 +1,42 @@
 require 'json'
 require 'net/http'
+require 'consul/migrate/defaults'
 
 module Consul
   module Migrate
     class Client
+      # Make options readable to CLI
       attr_reader :options
 
-      def bind_client; options[:bind_client]; end
-      def port;        options[:port];        end
-      def acl_token;   options[:acl_token];   end
-      def base_url;    "http://#{bind_client}:#{port}"; end
+      def bind_client; @options[:bind_client]; end
+      def port;        @options[:port];        end
+
+      def base_url
+        "http://#{bind_client}:#{port}"
+      end
+
+      def http_params
+        { :token => @options[:acl_token] }
+      end
 
       def initialize(options = {})
-        @options = {
-          :bind_client => 'localhost',
-          :port        => 8500
-        }.merge(options)
+        @options = parse_options(options)
       end
 
       # Get all ACLs
       def get_acl_list
-        url = "#{base_url}/v1/acl/list?token=#{acl_token}"
-        response = Net::HTTP.get_response(URI.parse(url))
+
+        uri = URI("#{base_url}/v1/acl/list")
+        uri.query = URI.encode_www_form(http_params)
+        response = Net::HTTP.get_response(uri)
 
         return response
       end
 
       # PUT single ACL
       def put_acl(acl_hash)
-        uri = URI("#{base_url}/v1/acl/create?token=#{acl_token}")
+        uri = URI("#{base_url}/v1/acl/create")
+        uri.query = URI.encode_www_form(http_params)
         req = Net::HTTP::Put.new(uri)
         req.body = acl_hash.to_json
 
@@ -65,6 +73,24 @@ module Consul
         return result
       end
 
+      private
+
+      # Method to fill in with default values if no options provided
+      def parse_options(options)
+        defaults = DEFAULTS.dup
+        options = options.dup
+
+
+        # Use default when option is not specified or nil
+        defaults.keys.each do |key|
+          options[key] = defaults[key] if options[key].nil?
+
+          # Symbolize only keys that are needed
+          options[key] = options[key.to_s] if options.has_key?(key.to_s)
+        end
+
+        options
+      end
     end
   end
 end
