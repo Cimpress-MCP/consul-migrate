@@ -1,6 +1,7 @@
 require 'json'
 require 'net/http'
 require 'consul/migrate/defaults'
+require 'consul/migrate/error'
 
 module Consul
   module Migrate
@@ -25,12 +26,15 @@ module Consul
 
       # Get all ACLs
       def get_acl_list
-
         uri = URI("#{base_url}/v1/acl/list")
         uri.query = URI.encode_www_form(http_params)
         response = Net::HTTP.get_response(uri)
 
-        return response
+        if !response.kind_of? Net::HTTPSuccess
+          fail Error, response.body
+        end
+
+        response.body
       end
 
       # PUT single ACL
@@ -44,12 +48,16 @@ module Consul
           http.request(req)
         end
 
-        return response
+        if !response.kind_of? Net::HTTPSuccess
+          fail Error, response.body
+        end
+
+        response.body
       end
 
       # Export ACLs into a file
       def export_acls(dest)
-        json = get_acl_list.body
+        json = get_acl_list
 
         File.open(dest, 'w') { |file|
           file.write(json)
@@ -66,7 +74,7 @@ module Consul
 
         result = []
         data_hash.each do |k, v|
-          h = JSON.parse(put_acl(k).body)
+          h = JSON.parse(put_acl(k))
           result.push(h)
         end
 
