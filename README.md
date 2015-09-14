@@ -22,7 +22,7 @@ Or install it yourself as:
 From the current authoritative ACL datacenter:
 
 ```ruby
-require 'consul-migrate'
+require 'consul/migrate'
 
 client = Consul::Migrate::Client.new(acl_token: 'your-acl-master-token')
 client.export_acls('/path/to/file')
@@ -30,7 +30,7 @@ client.export_acls('/path/to/file')
 
 From the desired new ACL datacenter:
 ```ruby
-require 'consul-migrate'
+require 'consul/migrate'
 client = Consul::Migrate::Client.new(acl_token: 'your-acl-master-token')
 client.import_acls('/path/to/file')
 ```
