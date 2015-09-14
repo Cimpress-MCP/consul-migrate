@@ -24,7 +24,7 @@ module Consul
         @options = parse_options(options)
       end
 
-      # Get all ACLs
+      # GET /v1/acl/list
       def get_acl_list
         uri = URI("#{base_url}/v1/acl/list")
         uri.query = URI.encode_www_form(http_params)
@@ -37,7 +37,7 @@ module Consul
         response.body
       end
 
-      # PUT single ACL
+      # PUT /v1/acl/create
       def put_acl(acl_hash)
         uri = URI("#{base_url}/v1/acl/create")
         uri.query = URI.encode_www_form(http_params)
