@@ -83,21 +83,20 @@ module Consul
 
       private
 
-      # Method to fill in with default values if no options provided
+      # Parse valid options
       def parse_options(options)
         defaults = DEFAULTS.dup
         options = options.dup
 
+        valid_options = {}
 
         # Use default when option is not specified or nil
         defaults.keys.each do |key|
-          options[key] = defaults[key] if options[key].nil?
+          valid_options[key] = defaults[key] if options[key].nil?
 
-          # Symbolize only keys that are needed
-          options[key] = options[key.to_s] if options.has_key?(key.to_s)
         end
 
-        options
+        valid_options
       end
     end
   end
