@@ -21,7 +21,7 @@ module Consul
       end
 
       def initialize(options = {})
-        @options = parse_options(options)
+        @options = CLIENT_DEFAULTS.merge(symbolize_keys(options))
       end
 
       # GET /v1/acl/list
@@ -41,7 +41,7 @@ module Consul
       def put_acl(acl_hash)
         uri = URI("#{base_url}/v1/acl/create")
         uri.query = URI.encode_www_form(http_params)
-        req = Net::HTTP::Put.new(uri)
+        req = Net::HTTP::Put.new(uri.request_uri)
         req.body = acl_hash.to_json
 
         response = Net::HTTP.start(uri.hostname, uri.port) do |http|
@@ -83,20 +83,8 @@ module Consul
 
       private
 
-      # Parse valid options
-      def parse_options(options)
-        defaults = DEFAULTS.dup
-        options = options.dup
-
-        valid_options = {}
-
-        # Use default when option is not specified or nil
-        defaults.keys.each do |key|
-          valid_options[key] = defaults[key] if options[key].nil?
-
-        end
-
-        valid_options
+      def symbolize_keys(hash)
+        Hash[hash.map{|k,v| v.is_a?(Hash) ? [k.to_sym, symbolize_keys(v)] : [k.to_sym, v] }]
       end
     end
   end

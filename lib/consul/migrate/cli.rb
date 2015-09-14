@@ -1,5 +1,6 @@
 require 'consul/migrate/version'
 require 'consul/migrate/client'
+require 'consul/migrate/defaults'
 require 'thor'
 require 'yaml'
 require 'fileutils'
@@ -27,8 +28,6 @@ module Consul
                     desc: 'Port to bind to'
       method_option :acl_token, type: :string, aliases: :t,
                     desc: 'ACL token that is used to access API'
-      method_option :config_file, type: :string, aliases: :f, default: "#{Dir.home}/.cmigrate/init.conf",
-                    desc: 'Config file. Defaults to $HOME/.cmigrate/init.conf'
       def init
         write_config(options)
       end
@@ -50,16 +49,14 @@ module Consul
       private
 
       def write_config(options)
-        parent_dir = File.dirname(options[:config_file])
+        parent_dir = File.dirname(CONFIG_FILE)
         FileUtils.mkdir_p parent_dir
 
         client = Consul::Migrate::Client.new(options)
-        new_options = client.options
 
         File.open(CONFIG_FILE, 'w') do |f|
           # Convert keys from symbols to string and turn hash into YAML
-          f.write Hash[new_options.map{|(k,v)| [k.to_s,v]}].to_yaml
-          # f.write new_options.to_yaml
+          f.write client.options.to_yaml
         end
       end
 

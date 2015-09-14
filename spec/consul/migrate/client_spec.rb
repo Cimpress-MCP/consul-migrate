@@ -4,7 +4,11 @@ describe Consul::Migrate::Client do
   include FakeFS::SpecHelpers
 
   before do
-    @client = Consul::Migrate::Client.new(acl_token: 'dummy-token')
+    hash = {
+      'port'      => 8500,
+      'acl_token' => 'dummy-token',
+    }
+    @client = Consul::Migrate::Client.new(hash)
 
     FakeFS::FileSystem.clone SPEC_ROOT
     @JSON_FILE = File.expand_path("support/fixtures/acls.json", SPEC_ROOT)
