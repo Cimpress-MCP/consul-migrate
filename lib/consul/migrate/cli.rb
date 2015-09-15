@@ -18,7 +18,7 @@ module Consul
 
       desc 'version', 'Display consul-migrate version'
       def version
-        say "#{VERSION}"
+        say VERSION
       end
 
       desc 'init', 'Initialize consul-migrate instance'
@@ -33,15 +33,15 @@ module Consul
       end
 
       desc 'export', 'Export ACLs from Consul via agent running in this system'
-      option :file, type: :string, default: 'output.json', aliases: :f,
-                     desc: 'Target file to write to'
+      method_option :file, type: :string, default: 'output.json', aliases: :f,
+                    desc: 'Target file to write to'
       def export
         @client.export_acls(options[:file])
       end
 
       desc 'import', 'Import ACLs into Consul cluster via agent running in this system'
-      option :file, type: :string, default: 'output.json', aliases: :f,
-                     desc: 'Target file to read from'
+      method_option :file, type: :string, default: 'output.json', aliases: :f,
+                    desc: 'Target file to read from'
       def import
         @client.import_acls(options[:file])
       end

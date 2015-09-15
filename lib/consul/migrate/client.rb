@@ -30,9 +30,7 @@ module Consul
         uri.query = URI.encode_www_form(http_params)
         response = Net::HTTP.get_response(uri)
 
-        if !response.kind_of? Net::HTTPSuccess
-          fail Error, response.body
-        end
+        fail(Error, response.body) unless response.kind_of? Net::HTTPSuccess
 
         response.body
       end
@@ -48,9 +46,7 @@ module Consul
           http.request(req)
         end
 
-        if !response.kind_of? Net::HTTPSuccess
-          fail Error, response.body
-        end
+        fail(Error, response.body) unless response.kind_of? Net::HTTPSuccess
 
         response.body
       end
