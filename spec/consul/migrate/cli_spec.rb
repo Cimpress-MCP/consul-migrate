@@ -5,21 +5,20 @@ describe Consul::Migrate::Cli do
 
   before do
     FakeFS::FileSystem.clone SPEC_ROOT
+    subject.options = { :acl_token => 'dummy-token' }
+    subject.init
   end
 
-  context 'export ACLs' do
-    pending
-    # it 'should be able to export ACLs' do
-    #   subject.options = { :acl_token => 'dummy-token' }
-    #   subject.init
-    #   subject.export
-    #
-    #   expect(File).to exist(File.expand_path('output.json'))
-    # end
+  it 'should be able to init properly' do
+    expect(File).to exist(File.join(Dir.home, '.cmigrate', 'init.conf'))
   end
 
-  context 'importing ACLs' do
-    pending
+  it 'should be able to export ACLs' do
+    expect(subject.export).to_not raise_error
+  end
+
+  it 'should be able to import ACLs' do
+    expect(subject.import).to_not raise_error
   end
 
 end
