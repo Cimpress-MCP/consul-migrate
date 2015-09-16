@@ -7,6 +7,7 @@ require 'fakefs/spec_helpers'
 WebMock.disable_net_connect!(allow_localhost: true)
 
 SPEC_ROOT  = File.dirname(__FILE__)
+JSON_FILE = File.expand_path("support/fixtures/acls.json", SPEC_ROOT)
 
 RSpec.configure do |config|
   config.before(:each) do

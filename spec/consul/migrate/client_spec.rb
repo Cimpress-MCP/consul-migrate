@@ -11,13 +11,12 @@ describe Consul::Migrate::Client do
     @client = Consul::Migrate::Client.new(hash)
 
     FakeFS::FileSystem.clone SPEC_ROOT
-    @JSON_FILE = File.expand_path("support/fixtures/acls.json", SPEC_ROOT)
   end
 
   context 'class methods' do
     it '.get_acl_list' do
       @client.get_acl_list
-      expect(@client).to_not eq File.read(@JSON_FILE)
+      expect(@client).to_not eq File.read(JSON_FILE)
     end
 
     it '.put_acl' do
@@ -37,21 +36,21 @@ describe Consul::Migrate::Client do
       @client.export_acls('tmp.json')
 
       parsed_data = JSON.parse(File.read('tmp.json'))
-      parsed_json_file = JSON.parse(File.read(@JSON_FILE))
+      parsed_json_file = JSON.parse(File.read(JSON_FILE))
 
       expect(File.exist?('tmp.json')).to eq true
       expect(parsed_data).to eq parsed_json_file
     end
 
     it '.import_acls' do
-      parsed_json_file = JSON.parse(File.read(@JSON_FILE))
+      parsed_json_file = JSON.parse(File.read(JSON_FILE))
 
       expected = []
       parsed_json_file.each do |e|
          expected.push(e.select { |key, value| ['ID'].include?(key) })
       end
 
-      r = @client.import_acls(@JSON_FILE)
+      r = @client.import_acls(JSON_FILE)
 
       expect(r).to match_array(expected)
     end

@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Consul::Migrate::Cli do
   include FakeFS::SpecHelpers
 
-  before do
+  before(:each) do
     FakeFS::FileSystem.clone SPEC_ROOT
-    subject.options = { :acl_token => 'dummy-token' }
-    subject.init
+    args = %w[init -t dummy-token]
+    Consul::Migrate::Cli.start(args)
   end
 
   it 'should be able to init properly' do
@@ -14,11 +14,21 @@ describe Consul::Migrate::Cli do
   end
 
   it 'should be able to export ACLs' do
-    expect(subject.export).to_not raise_error
+    args = %w[export]
+    expect(Consul::Migrate::Cli.start(args)).to eq(true)
+    expect(File).to exist('output.json')
   end
 
   it 'should be able to import ACLs' do
-    expect(subject.import).to_not raise_error
-  end
+    parsed_file_json = JSON.parse(File.read(JSON_FILE))
 
+    json_array = []
+    parsed_file_json.each do |e|
+       json_array.push(e.select { |key, value| ['ID'].include?(key) })
+    end
+
+    FileUtils.cp(JSON_FILE, 'output.json')
+    args = %w[import]
+    expect(Consul::Migrate::Cli.start(args)).to match_array(json_array)
+  end
 end
