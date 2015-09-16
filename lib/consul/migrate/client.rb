@@ -1,47 +1,59 @@
 require 'json'
 require 'net/http'
+require 'consul/migrate/defaults'
+require 'consul/migrate/error'
 
 module Consul
   module Migrate
     class Client
+      # Make options readable to CLI
       attr_reader :options
 
-      def bind_client; options[:bind_client]; end
-      def port;        options[:port];        end
-      def acl_token;   options[:acl_token];   end
-      def base_url;    "http://#{bind_client}:#{port}"; end
+      def bind_client; @options[:bind_client]; end
+      def port;        @options[:port];        end
+
+      def base_url
+        "http://#{bind_client}:#{port}"
+      end
+
+      def http_params
+        { :token => @options[:acl_token] }
+      end
 
       def initialize(options = {})
-        @options = {
-          :bind_client => 'localhost',
-          :port        => 8500
-        }.merge(options)
+        @options = CLIENT_DEFAULTS.merge(symbolize_keys(options))
       end
 
-      # Get all ACLs
+      # GET /v1/acl/list
       def get_acl_list
-        url = "#{base_url}/v1/acl/list?token=#{acl_token}"
-        response = Net::HTTP.get_response(URI.parse(url))
+        uri = URI("#{base_url}/v1/acl/list")
+        uri.query = URI.encode_www_form(http_params)
+        response = Net::HTTP.get_response(uri)
 
-        return response
+        fail(Error, response.body) unless response.kind_of? Net::HTTPSuccess
+
+        response.body
       end
 
-      # PUT single ACL
+      # PUT /v1/acl/create
       def put_acl(acl_hash)
-        uri = URI("#{base_url}/v1/acl/create?token=#{acl_token}")
-        req = Net::HTTP::Put.new(uri)
+        uri = URI("#{base_url}/v1/acl/create")
+        uri.query = URI.encode_www_form(http_params)
+        req = Net::HTTP::Put.new(uri.request_uri)
         req.body = acl_hash.to_json
 
         response = Net::HTTP.start(uri.hostname, uri.port) do |http|
           http.request(req)
         end
 
-        return response
+        fail(Error, response.body) unless response.kind_of? Net::HTTPSuccess
+
+        response.body
       end
 
       # Export ACLs into a file
       def export_acls(dest)
-        json = get_acl_list.body
+        json = get_acl_list
 
         File.open(dest, 'w') { |file|
           file.write(json)
@@ -58,13 +70,18 @@ module Consul
 
         result = []
         data_hash.each do |k, v|
-          h = JSON.parse(put_acl(k).body)
+          h = JSON.parse(put_acl(k))
           result.push(h)
         end
 
         return result
       end
 
+      private
+
+      def symbolize_keys(hash)
+        Hash[hash.map{|k,v| v.is_a?(Hash) ? [k.to_sym, symbolize_keys(v)] : [k.to_sym, v] }]
+      end
     end
   end
 end

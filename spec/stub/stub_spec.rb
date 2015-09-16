@@ -38,7 +38,7 @@ describe ConsulStub do
     describe 'PUT /v1/acl/create' do
       it 'responds with 200' do
         uri = URI('http://localhost:8500/v1/acl/create?token=dummy-token')
-        req = Net::HTTP::Put.new(uri, {'Content-Type' =>'application/json'})
+        req = Net::HTTP::Put.new(uri.request_uri, {'Content-Type' =>'application/json'})
         req.body = {}.to_json
         response = Net::HTTP.start(uri.hostname, uri.port) do |http|
           http.request(req)

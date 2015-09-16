@@ -1,0 +1,4 @@
+#! ruby
+require 'consul/migrate/cli'
+
+Consul::Migrate::Cli.start(ARGV)
