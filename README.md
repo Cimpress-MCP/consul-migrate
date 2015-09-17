@@ -35,6 +35,14 @@ client = Consul::Migrate::Client.new(acl_token: 'your-acl-master-token')
 client.import_acls('/path/to/file')
 ```
 
+## CLI
+
+```
+$ consul-migrate init -t 'your-acl-master-token'
+$ consul-migrate export -f 'path/to/file'
+$ consul-migrate import -f 'path/to/file'
+```
+
 ## Caveats
 
 consul-migrate currently is only set up to work with the default `-client` (127.0.0.1) and default http port (8500). Future versions of consul-migrate should have parameters for inputing these values.
@@ -49,6 +57,4 @@ consul-migrate currently is only set up to work with the default `-client` (127.
 
 ## TODO
 
-1. Have it work as a cli so that scripting is not necessary
-2. Include port and address as options instead of hardcoded values.
-3. Spec test should also test for default policy allow case
+1. Spec test should also test for default policy allow case
