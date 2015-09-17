@@ -36,16 +36,14 @@ client.import_acls('/path/to/file')
 ```
 
 ## CLI
-
+Basic usage commands:
 ```
 $ consul-migrate init -t 'your-acl-master-token'
 $ consul-migrate export -f 'path/to/file'
 $ consul-migrate import -f 'path/to/file'
 ```
 
-## Caveats
-
-consul-migrate currently is only set up to work with the default `-client` (127.0.0.1) and default http port (8500). Future versions of consul-migrate should have parameters for inputing these values.
+Refer to `consul-migrate help` for more detailed usage commands.
 
 ## Contributing
 
